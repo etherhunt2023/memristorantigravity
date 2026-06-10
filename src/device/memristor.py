@@ -219,14 +219,14 @@ class MemristorDevice:
         # Calculate current
         return self.current(v)
 
-    def current(self, v: float) -> float:
-        """Calculates current through the device at current state self.w, including noise.
+    def current_noise_free(self, v: float) -> float:
+        """Calculates current through the device at current state self.w, excluding noise.
 
         Args:
             v: Applied voltage (V).
 
         Returns:
-            float: Device current (A).
+            float: Noise-free device current (A).
         """
         # Clean current from compact model
         i_clean = self.model.current(v, self.w)
@@ -240,6 +240,19 @@ class MemristorDevice:
         ):
             drift_mult = (1.0 + self.time_since_programming / self.drift_t_zero) ** self.drift_coeff
             i_active = i_clean / drift_mult
+
+        return float(i_active)
+
+    def current(self, v: float) -> float:
+        """Calculates current through the device at current state self.w, including noise.
+
+        Args:
+            v: Applied voltage (V).
+
+        Returns:
+            float: Device current (A).
+        """
+        i_active = self.current_noise_free(v)
 
         # Apply electrical noise
         # Compute effective resistance for Johnson noise calculations
