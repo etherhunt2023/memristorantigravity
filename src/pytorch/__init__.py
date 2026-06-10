@@ -6,5 +6,6 @@ of memristive synapses using backpropagation.
 """
 
 from pytorch.layer import CrossbarFunction, MemristorLinear
+from pytorch.neuron import SurrogateHeaviside, TorchLIFNeurons
 
-__all__ = ["CrossbarFunction", "MemristorLinear"]
+__all__ = ["CrossbarFunction", "MemristorLinear", "SurrogateHeaviside", "TorchLIFNeurons"]

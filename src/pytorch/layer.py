@@ -173,11 +173,8 @@ class MemristorLinear(nn.Module):
 
     def sync_weights_to_devices(self) -> None:
         """Synchronizes PyTorch weight parameter (conductance) to memristor state variables w."""
-        # Clip weight to physical conductance limits
-        with torch.no_grad():
-            self.weight.clamp_(min=self.g_min, max=self.g_max)
-
-        g_arr = self.weight.detach().cpu().numpy()
+        # Use a clamped representation without in-place modification of parameter self.weight
+        g_arr = torch.clamp(self.weight, min=self.g_min, max=self.g_max).detach().cpu().numpy()
 
         for i in range(self.in_features):
             for j in range(self.out_features):
@@ -223,16 +220,13 @@ class MemristorLinear(nn.Module):
         Returns:
             torch.Tensor: Output current/activations tensor (batch_size, out_features).
         """
-        # Synchronize weights from PyTorch parameter to physical devices
-        # to ensure MNA solver runs on up-to-date states
-        # Clamp weight to physical conductance limits
-        with torch.no_grad():
-            self.weight.clamp_(min=self.g_min, max=self.g_max)
+        # Clamp weight to physical conductance limits (out-of-place to support BPTT gradient flow)
+        clamped_weight = torch.clamp(self.weight, min=self.g_min, max=self.g_max)
 
         if self.use_mna:
             self.sync_weights_to_devices()
 
-        y = CrossbarFunction.apply(x, self.weight, self.crossbar, self.use_mna)
+        y = CrossbarFunction.apply(x, clamped_weight, self.crossbar, self.use_mna)
 
         if self.bias is not None:
             return y + self.bias
