@@ -27,9 +27,20 @@ compact_model:
   type: "VTEAM"  # Options: VTEAM, Yakopcic, Simmons
   fitting:
     algorithm: "differential_evolution"
-    max_iter: 1000
-    pop_size: 50
+    max_iter: 500
+    pop_size: 30
     tolerance: 1.0e-4
+    loss_gamma: 0.3  # weight for linear current loss (1 - gamma is for log current loss)
+    # Optimization bounds for VTEAM model fitting: [min, max]
+    vteam_bounds:
+      k_on: [-1000.0, -0.01]
+      k_off: [0.01, 1000.0]
+      alpha_on: [1.0, 5.0]
+      alpha_off: [1.0, 5.0]
+      v_on: [0.1, 2.0]
+      v_off: [-2.0, -0.1]
+      r_on: [100.0, 1.0e4]
+      r_off: [1.0e4, 1.0e7]
 
   # Default parameters for VTEAM Model
   vteam:
