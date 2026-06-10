@@ -135,3 +135,19 @@ snn:
   threshold: 1.0
   leak_constant: 0.95
   refractory_period: 2.0e-3  # s
+
+plasticity:
+  stdp:
+    a_plus: 0.05       # Amplitude of potentiation (relative conductance change)
+    a_minus: 0.03      # Amplitude of depression (relative conductance change)
+    tau_plus: 20.0e-3  # Potentiation decay time constant (s)
+    tau_minus: 20.0e-3 # Depression decay time constant (s)
+    update_type: "multiplicative" # Options: additive, multiplicative
+    
+    # Pulse-based physical STDP settings
+    pulse_based:
+      v_pre_amp: 1.2      # Amplitude of pre-synaptic pulse (V)
+      v_post_amp: 1.2     # Amplitude of post-synaptic pulse (V)
+      tau_pulse: 15.0e-3  # Pulse decay time constant (s)
+      pulse_duration: 50.0e-3 # Pulse duration simulated (s)
+
