@@ -82,6 +82,45 @@ compact_model:
     v_on: 0.6          # Set voltage threshold (V)
     v_off: -0.6         # Reset voltage threshold (V)
 
+# Hardware-aware device configurations
+device:
+  d2d:
+    enabled: true
+    # Mapping parameter names to distribution and variation coefficient (relative standard deviation)
+    # Using lognormal for resistances (strictly positive) and gaussian for thresholds / rates.
+    parameters:
+      r_on: { dist: "lognormal", std: 0.15 }
+      r_off: { dist: "lognormal", std: 0.15 }
+      v_on: { dist: "gaussian", std: 0.05 }
+      v_off: { dist: "gaussian", std: 0.05 }
+      k_on: { dist: "gaussian", std: 0.1 }
+      k_off: { dist: "gaussian", std: 0.1 }
+  
+  c2c:
+    enabled: true
+    # State diffusion noise coefficient (absolute standard deviation scaled by sqrt(dt))
+    state_noise_std: 0.02
+    # Dynamic parameter fluctuations
+    parameter_noise_std: 0.01
+
+  drift:
+    enabled: true
+    # Drift exponent nu (positive makes resistance drift up, conductance drift down)
+    coeff: 0.05
+    # Reference time t_zero (seconds)
+    t_zero: 1.0
+    # Drift target type: "resistance" or "state"
+    type: "resistance"
+    # Programming voltage threshold: above this voltage, drift tracking is reset (V)
+    programming_threshold: 0.5
+
+  noise:
+    thermal: true
+    shot: true
+    bandwidth: 1.0e6  # 1 MHz
+    generic_std: 0.0   # generic current noise floor in Amperes
+    temperature: 300.0 # Kelvin
+
 crossbar:
   size: [64, 64]
   line_resistance: 1.5  # ohms per segment
