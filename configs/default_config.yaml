@@ -1,0 +1,45 @@
+# COMSOL2Neuromorphic Configuration
+
+logging:
+  level: "INFO"
+  file_path: "logs/comsol2neuromorphic.log"
+  console_output: true
+
+comsol_parser:
+  delimiter: null  # Auto-detect (whitespace, tab, comma)
+  comment_char: "%"
+  column_mapping:
+    "time": ["t", "time", "Time (s)", "Time"]
+    "voltage": ["v", "voltage", "V", "V_source", "V (V)", "Voltage (V)"]
+    "current": ["i", "current", "I", "I_device", "I (A)", "Current (A)"]
+    "state_var": ["w", "state", "gap", "w (nm)", "gap (nm)", "State"]
+    "temperature": ["T", "temp", "temperature", "T (K)", "Temperature (K)"]
+
+extraction:
+  non_linearity_voltage: 1.0  # Voltage at which to calculate non-linearity ratio
+  switching_threshold_current: 1e-5  # Threshold to identify LRS/HRS switching
+  lrs_read_voltage: 0.1  # Voltage to read Low Resistance State
+  hrs_read_voltage: 0.1  # Voltage to read High Resistance State
+
+compact_model:
+  type: "VTEAM"  # Options: VTEAM, Yakopcic, Simmons
+  fitting:
+    algorithm: "differential_evolution"
+    max_iter: 1000
+    pop_size: 50
+    tolerance: 1e-4
+
+crossbar:
+  size: [64, 64]
+  line_resistance: 1.5  # ohms per segment
+  source_resistance: 100.0  # ohms
+  load_resistance: 100.0  # ohms
+  parasitic_capacitance: 1e-15  # Farads
+  mna_tolerance: 1e-6
+
+snn:
+  neuron_model: "LIF"
+  time_step: 1e-3  # s
+  threshold: 1.0
+  leak_constant: 0.95
+  refractory_period: 2e-3  # s
