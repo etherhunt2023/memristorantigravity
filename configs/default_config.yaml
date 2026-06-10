@@ -17,9 +17,11 @@ comsol_parser:
 
 extraction:
   non_linearity_voltage: 1.0  # Voltage at which to calculate non-linearity ratio
-  switching_threshold_current: 1e-5  # Threshold to identify LRS/HRS switching
+  switching_threshold_current: 1e-5  # General threshold to identify LRS/HRS switching
   lrs_read_voltage: 0.1  # Voltage to read Low Resistance State
   hrs_read_voltage: 0.1  # Voltage to read High Resistance State
+  set_threshold_current: 1e-5  # Specific current threshold for Vset
+  reset_threshold_current: 1e-5  # Specific current threshold for Vreset
 
 compact_model:
   type: "VTEAM"  # Options: VTEAM, Yakopcic, Simmons
