@@ -17,11 +17,11 @@ comsol_parser:
 
 extraction:
   non_linearity_voltage: 1.0  # Voltage at which to calculate non-linearity ratio
-  switching_threshold_current: 1e-5  # General threshold to identify LRS/HRS switching
+  switching_threshold_current: 1.0e-5  # General threshold to identify LRS/HRS switching
   lrs_read_voltage: 0.1  # Voltage to read Low Resistance State
   hrs_read_voltage: 0.1  # Voltage to read High Resistance State
-  set_threshold_current: 1e-5  # Specific current threshold for Vset
-  reset_threshold_current: 1e-5  # Specific current threshold for Vreset
+  set_threshold_current: 1.0e-5  # Specific current threshold for Vset
+  reset_threshold_current: 1.0e-5  # Specific current threshold for Vreset
 
 compact_model:
   type: "VTEAM"  # Options: VTEAM, Yakopcic, Simmons
@@ -29,19 +29,59 @@ compact_model:
     algorithm: "differential_evolution"
     max_iter: 1000
     pop_size: 50
-    tolerance: 1e-4
+    tolerance: 1.0e-4
+
+  # Default parameters for VTEAM Model
+  vteam:
+    w_on: 0.0          # Conductive state (normalized state 0)
+    w_off: 1.0         # Insulating state (normalized state 1)
+    v_on: 0.8          # Positive Set threshold voltage (V)
+    v_off: -0.8        # Negative Reset threshold voltage (V)
+    k_on: -10.0        # Rate constant for Set (1/s)
+    k_off: 10.0        # Rate constant for Reset (1/s)
+    alpha_on: 3        # Exponent for Set voltage dependence
+    alpha_off: 3       # Exponent for Reset voltage dependence
+    r_on: 1000.0       # LRS resistance (Ohms)
+    r_off: 100000.0    # HRS resistance (Ohms)
+    d: 3.0e-9          # Scaling oxide thickness (m)
+    p: 4               # Window function exponent
+
+  # Default parameters for Yakopcic Model
+  yakopcic:
+    a1: 0.05
+    a2: 0.05
+    b: 0.5
+    xp: 0.3
+    xn: 0.5
+    gp: 10.0
+    gn: 10.0
+    ap: 0.1
+    an: 0.1
+    eta: 1.0
+
+  # Default parameters for Simmons Tunneling Barrier Model
+  simmons:
+    w_on: 1.0e-10        # Minimum gap distance (m)
+    w_off: 1.5e-9      # Maximum gap distance (m)
+    tox: 3.0e-9          # Total oxide thickness (m)
+    phi_0: 0.95        # Electron barrier height (eV)
+    area: 1.0e-12        # Contact area (m^2)
+    k_on: -1.0e-9        # State migration coefficient for Set (m/s)
+    k_off: 1.0e-9        # State migration coefficient for Reset (m/s)
+    v_on: 0.6          # Set voltage threshold (V)
+    v_off: -0.6         # Reset voltage threshold (V)
 
 crossbar:
   size: [64, 64]
   line_resistance: 1.5  # ohms per segment
   source_resistance: 100.0  # ohms
   load_resistance: 100.0  # ohms
-  parasitic_capacitance: 1e-15  # Farads
-  mna_tolerance: 1e-6
+  parasitic_capacitance: 1.0e-15  # Farads
+  mna_tolerance: 1.0e-6
 
 snn:
   neuron_model: "LIF"
-  time_step: 1e-3  # s
+  time_step: 1.0e-3  # s
   threshold: 1.0
   leak_constant: 0.95
-  refractory_period: 2e-3  # s
+  refractory_period: 2.0e-3  # s
